@@ -101,6 +101,7 @@ static void diagnoseBadTypeAttribute(Sema &S, const AttributeList &attr,
     case AttributeList::AT_stdcall: \
     case AttributeList::AT_thiscall: \
     case AttributeList::AT_pascal: \
+    case AttributeList::AT_swapstack: \
     case AttributeList::AT_regparm: \
     case AttributeList::AT_pcs \
 
@@ -2651,6 +2652,8 @@ static AttributeList::Kind getAttrListKind(AttributedType::Kind kind) {
     return AttributeList::AT_thiscall;
   case AttributedType::attr_pascal:
     return AttributeList::AT_pascal;
+  case AttributedType::attr_swapstack:
+    return AttributeList::AT_swapstack;
   case AttributedType::attr_pcs:
     return AttributeList::AT_pcs;
   }

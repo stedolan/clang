@@ -760,6 +760,17 @@ RValue CodeGenFunction::EmitBuiltinExpr(const FunctionDecl *FD,
 
     return RValue::get(0);
   }
+  case Builtin::BI__builtin_newstack: {
+    Value* Mem = Builder.CreateBitCast(EmitScalarExpr(E->getArg(0)),
+                                       Int8PtrTy);
+    Value* Len = Builder.CreateIntCast(EmitScalarExpr(E->getArg(1)),
+                                       Int32Ty, false, "tmp");
+    Value* Func = Builder.CreateBitCast(EmitScalarExpr(E->getArg(2)),
+                                        Int8PtrTy);
+
+    Value* f = CGM.getIntrinsic(Intrinsic::newstack);
+    return RValue::get(Builder.CreateCall3(f, Mem, Len, Func));
+  }
   case Builtin::BI__sync_fetch_and_add:
   case Builtin::BI__sync_fetch_and_sub:
   case Builtin::BI__sync_fetch_and_or:

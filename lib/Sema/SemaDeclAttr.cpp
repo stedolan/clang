@@ -2461,6 +2461,9 @@ static void handleCallConvAttr(Sema &S, Decl *D, const AttributeList &Attr) {
   case AttributeList::AT_pascal:
     D->addAttr(::new (S.Context) PascalAttr(Attr.getLoc(), S.Context));
     return;
+  case AttributeList::AT_swapstack:
+    D->addAttr(::new (S.Context) SwapStackAttr(Attr.getLoc(), S.Context));
+    return;
   case AttributeList::AT_pcs: {
     Expr *Arg = Attr.getArg(0);
     StringLiteral *Str = dyn_cast<StringLiteral>(Arg);
@@ -2516,6 +2519,7 @@ bool Sema::CheckCallingConvAttr(const AttributeList &attr, CallingConv &CC) {
   case AttributeList::AT_stdcall: CC = CC_X86StdCall; break;
   case AttributeList::AT_thiscall: CC = CC_X86ThisCall; break;
   case AttributeList::AT_pascal: CC = CC_X86Pascal; break;
+  case AttributeList::AT_swapstack: CC = CC_SwapStack; break;
   case AttributeList::AT_pcs: {
     Expr *Arg = attr.getArg(0);
     StringLiteral *Str = dyn_cast<StringLiteral>(Arg);
@@ -3062,6 +3066,7 @@ static void ProcessInheritableDeclAttr(Sema &S, Scope *scope, Decl *D,
   case AttributeList::AT_fastcall:
   case AttributeList::AT_thiscall:
   case AttributeList::AT_pascal:
+  case AttributeList::AT_swapstack:
   case AttributeList::AT_pcs:
     handleCallConvAttr(S, D, Attr);
     break;

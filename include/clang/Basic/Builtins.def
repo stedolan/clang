@@ -607,6 +607,9 @@ BUILTIN(__noop, "v.", "n")
 BUILTIN(__debugbreak, "v", "n")
 
 
+// NewStack
+BUILTIN(__builtin_newstack, "v*v*iv*", "n")
+
 // C99 library functions
 // C99 stdlib.h
 LIBBUILTIN(abort, "v",            "fr",    "stdlib.h", ALL_LANGUAGES)

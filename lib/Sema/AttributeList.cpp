@@ -193,6 +193,7 @@ AttributeList::Kind AttributeList::getKind(const IdentifierInfo *Name) {
     .Case("thiscall", AT_thiscall)
     .Case("bounded", IgnoredAttribute)       // OpenBSD
     .Case("pascal", AT_pascal)
+    .Case("swapstack", AT_swapstack)
     .Case("__cdecl", AT_cdecl)
     .Case("__stdcall", AT_stdcall)
     .Case("__fastcall", AT_fastcall)

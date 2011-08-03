@@ -233,6 +233,7 @@ public:
     AT_shared,
     AT_stdcall,
     AT_thiscall,
+    AT_swapstack,          // Clang-specific
     AT_transparent_union,
     AT_unavailable,
     AT_unused,

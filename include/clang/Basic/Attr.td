@@ -476,6 +476,10 @@ def ThisCall : InheritableAttr {
   let Spellings = ["thiscall", "__thiscall"];
 }
 
+def SwapStack : InheritableAttr {
+  let Spellings = ["swapstack"];
+}
+
 def Pascal : InheritableAttr {
   let Spellings = ["pascal", "__pascal"];
 }

@@ -442,6 +442,7 @@ enum CallingConv {
   CC_X86FastCall, // __attribute__((fastcall))
   CC_X86ThisCall, // __attribute__((thiscall))
   CC_X86Pascal,   // __attribute__((pascal))
+  CC_SwapStack,   // __attribute__((swapstack))
   CC_AAPCS,       // __attribute__((pcs("aapcs")))
   CC_AAPCS_VFP    // __attribute__((pcs("aapcs-vfp")))
 };
@@ -3202,7 +3203,8 @@ public:
     attr_fastcall,
     attr_stdcall,
     attr_thiscall,
-    attr_pascal
+    attr_pascal,
+    attr_swapstack
   };
 
 private:

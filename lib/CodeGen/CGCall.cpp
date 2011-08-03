@@ -38,6 +38,7 @@ static unsigned ClangCallConvToLLVMCallConv(CallingConv CC) {
   case CC_X86StdCall: return llvm::CallingConv::X86_StdCall;
   case CC_X86FastCall: return llvm::CallingConv::X86_FastCall;
   case CC_X86ThisCall: return llvm::CallingConv::X86_ThisCall;
+  case CC_SwapStack: return llvm::CallingConv::SwapStack;
   case CC_AAPCS: return llvm::CallingConv::ARM_AAPCS;
   case CC_AAPCS_VFP: return llvm::CallingConv::ARM_AAPCS_VFP;
   // TODO: add support for CC_X86Pascal to llvm
@@ -104,6 +105,9 @@ static CallingConv getCallingConventionForDecl(const Decl *D) {
 
   if (D->hasAttr<PascalAttr>())
     return CC_X86Pascal;
+
+  if (D->hasAttr<SwapStackAttr>())
+    return CC_SwapStack;
 
   if (PcsAttr *PCS = D->getAttr<PcsAttr>())
     return (PCS->getPCS() == PcsAttr::AAPCS ? CC_AAPCS : CC_AAPCS_VFP);
@@ -268,8 +272,21 @@ const CGFunctionInfo &CodeGenTypes::getFunctionInfo(CanQualType ResTy,
   bool Inserted = FunctionsBeingProcessed.insert(FI); (void)Inserted;
   assert(Inserted && "Recursively being processed?");
   
-  // Compute ABI information.
-  getABIInfo().computeInfo(*FI);
+  if (Info.getCC() == CC_SwapStack){
+    QualType RetTy = FI->getReturnType();
+    if (RetTy->isVoidType())
+      FI->getReturnInfo() = ABIArgInfo::getIgnore();
+    else
+      FI->getReturnInfo() = ABIArgInfo::getDirect();
+    
+    for (CGFunctionInfo::arg_iterator it = FI->arg_begin(), ie = FI->arg_end();
+         it != ie; ++it)
+      it->info = ABIArgInfo::getDirect();
+  }else{
+    // Compute ABI information.
+    getABIInfo().computeInfo(*FI);
+  }
+
 
   // Loop over all of the computed argument and return value info.  If any of
   // them are direct or extend without a specified coerce type, specify the
